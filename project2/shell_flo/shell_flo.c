@@ -1,3 +1,4 @@
+// usage: gcc shell_flo.c -o shell_flo && ./shell_flo
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/types.h>
@@ -19,8 +20,8 @@ int main(void)
 {
 	int should_run = 1; /* flag to determine when to exit program */
 	while (should_run) {
-		printf("flo>");
 		fflush(stdout);
+		printf("flo>");
 		char ch[MAX_LINE];
 		int ampersand = 0;
 		char end;
@@ -45,11 +46,11 @@ int main(void)
 				i = 0;
 				reInput = 0;
 				reOutput = 0;
+				ampersand = 0;
 				flag = 0;
 			}
 			if (!strcmp(ch,"&")) {
 				ampersand = 1;
-				i+=1;
 				break;
 			}
 			if (!strcmp(ch,"<")) {
@@ -114,7 +115,7 @@ int main(void)
 		}
 		else{ /* parent */
 			if (!ampersand){
-				wait(NULL);
+				wait(pid);
 			}
 		}
 	}
@@ -167,7 +168,7 @@ void exe(){
 		}
 		else{
 			close(fd[1]);
-			wait(NULL);		
+			wait(pid);		
 			int i_dup2_fd = dup2(fd[0],STDIN_FILENO);
 			execvp(tmp2[0], tmp2); 
 			fflush(stdout);
